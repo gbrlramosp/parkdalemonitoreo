@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hilos de Yecapixtla | Monitoreo de máquinas</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main id="loginScreen" class="login-screen">
+      <section class="login-panel">
+        <div class="brand-lockup">
+          <img src="images/parkdale-logo.png" alt="Logo Hilos de Yecapixtla" />
+          <div>
+            <h1>Hilos de Yecapixtla</h1>
+            <p>Monitoreo de máquinas</p>
+          </div>
+        </div>
+
+        <form id="loginForm" class="form-grid compact-form">
+          <label>
+            Usuario
+            <input id="loginUser" type="text" autocomplete="username" required />
+          </label>
+          <label>
+            Contraseña
+            <input id="loginPassword" type="password" autocomplete="current-password" required />
+          </label>
+          <button class="primary-action login-action" type="submit">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+              <path d="M10 17l5-5-5-5" />
+              <path d="M15 12H3" />
+            </svg>
+            <span>Iniciar sesión</span>
+          </button>
+          <p id="loginHint" class="login-hint">Usuario inicial: admin | Contraseña: admin</p>
+        </form>
+      </section>
+    </main>
+
+    <main id="appShell" class="app-shell hidden">
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <img src="images/parkdale-logo.png" alt="Logo Hilos de Yecapixtla" />
+          <div>
+            <span class="brand-title">Hilos de Yecapixtla</span>
+            <span>Monitoreo de máquinas</span>
+          </div>
+        </div>
+        <nav id="navMenu" class="nav-menu"></nav>
+        <div class="sidebar-user">
+          <span id="currentUserName"></span>
+          <small id="currentUserRole"></small>
+        </div>
+        <button id="logoutBtn" class="logout-button" type="button">Cerrar sesión</button>
+      </aside>
+
+      <section class="main-area">
+        <header class="topbar">
+          <button id="mobileMenuBtn" class="icon-button mobile-only" type="button" aria-label="Abrir menú">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <div>
+            <h2 id="viewTitle">Inicio</h2>
+            <p id="viewSubtitle">Registros y concentrado operativo</p>
+          </div>
+        </header>
+
+        <section id="toast" class="toast hidden"></section>
+
+        <section id="homeView" class="view active"></section>
+        <section id="operatorView" class="view"></section>
+        <section id="measurementView" class="view"></section>
+        <section id="consultView" class="view"></section>
+        <section id="statsView" class="view"></section>
+      </section>
+    </main>
+
+    <dialog id="detailModal" class="detail-modal">
+      <form method="dialog">
+        <button class="modal-close" aria-label="Cerrar">x</button>
+      </form>
+      <div id="modalContent"></div>
+    </dialog>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
