@@ -52,11 +52,11 @@ button {
   padding: 24px;
   background:
     linear-gradient(135deg, rgba(33, 37, 41, 0.92), rgba(73, 80, 87, 0.88)),
-    url("images/parkdale-logo.png") center / 380px no-repeat;
+    url("images/parkdale-logo.png") center / 400px no-repeat;
 }
 
 .login-panel {
-  width: min(100%, 420px);
+  width: min(100%, 450px);
   background: var(--white);
   border-radius: 18px;
   padding: 34px 30px 28px;
