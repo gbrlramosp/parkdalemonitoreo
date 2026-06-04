@@ -52,11 +52,11 @@ button {
   padding: 24px;
   background:
     linear-gradient(135deg, rgba(33, 37, 41, 0.92), rgba(73, 80, 87, 0.88)),
-    url("images/parkdale-logo.png") center / 400px no-repeat;
+    url("images/parkdale-logo.png") center / 360px no-repeat;
 }
 
 .login-panel {
-  width: min(100%, 450px);
+  width: min(100%, 420px);
   background: var(--white);
   border-radius: 18px;
   padding: 34px 30px 28px;
@@ -160,10 +160,20 @@ input:disabled {
   background: var(--ink);
 }
 
-.save-action {
-  min-height: 30px;
-  padding: 6px 12px;
-  font-size: var(--font-small);
+.form-actions .save-action,
+button.primary-action.save-action {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: max-content !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  padding: 4px 10px !important;
+  font-size: 14px !important;
+  line-height: 1 !important;
+  border-radius: 999px !important;
 }
 
 .secondary-action {
@@ -467,8 +477,14 @@ tr:last-child td {
 .toolbar {
   display: flex;
   gap: 10px;
-  justify-content: flex-end;
+  justify-content: center;
   flex-wrap: wrap;
+}
+
+.form-grid .form-actions {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: auto;
 }
 
 .chart-grid {
@@ -493,6 +509,7 @@ tr:last-child td {
   max-height: 100%;
   width: 100% !important;
   height: 100% !important;
+  image-rendering: auto;
 }
 
 .detail-modal {
