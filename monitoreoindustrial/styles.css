@@ -67,19 +67,19 @@ button {
 .sidebar-brand {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   align-items: center;
   text-align: center;
 }
 
 .brand-lockup img {
-  width: 92px;
-  height: 92px;
+  width: 104px;
+  height: 104px;
   object-fit: contain;
 }
 
 .brand-lockup h1 {
-  margin: 10px 0 0;
+  margin: 4px 0 0;
   font-size: 24px;
   font-weight: 400;
 }
@@ -221,6 +221,7 @@ input:disabled {
 }
 
 .sidebar-brand {
+  gap: 12px;
   padding-bottom: 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.14);
 }
