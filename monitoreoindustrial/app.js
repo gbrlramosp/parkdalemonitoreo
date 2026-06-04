@@ -221,7 +221,7 @@ function renderMeasurementTableView(containerId, filterKey, todayOnly) {
   const page = state.pages[filterKey];
   const pageRows = rows.slice((page - 1) * 10, page * 10);
   const cards = getCards(rows);
-  const showAdminTools = state.currentUser.role === "administrador" && filterKey === "consult";
+  const showDownload = state.currentUser.role === "administrador" && filterKey === "consult";
 
   container.innerHTML = `
     <div class="dashboard-cards">
@@ -233,10 +233,10 @@ function renderMeasurementTableView(containerId, filterKey, todayOnly) {
     <section class="panel">
       <div class="panel-header">
         <h3>${todayOnly ? "Registros del día" : "Todas las mediciones"}</h3>
-        ${showAdminTools ? `<button id="downloadExcelBtn" class="secondary-action" type="button">Descargar Excel</button>` : ""}
+        ${showDownload ? `<button id="downloadExcelBtn" class="secondary-action" type="button">Descargar Excel</button>` : ""}
       </div>
       ${renderFilters(filterKey)}
-      ${renderTable(pageRows, showAdminTools)}
+      ${renderTable(pageRows)}
       <div class="pagination">
         <button class="secondary-action" id="${filterKey}Prev" type="button">Anterior</button>
         <span>Página ${page} de ${totalPages}</span>
@@ -246,7 +246,7 @@ function renderMeasurementTableView(containerId, filterKey, todayOnly) {
   `;
 
   bindFilters(filterKey, container);
-  bindTableActions(showAdminTools, container);
+  bindTableActions(container);
   document.getElementById(`${filterKey}Prev`).addEventListener("click", () => {
     state.pages[filterKey] = Math.max(1, state.pages[filterKey] - 1);
     renderMeasurementTableView(containerId, filterKey, todayOnly);
@@ -294,8 +294,8 @@ function bindFilters(filterKey, container) {
   });
 }
 
-function renderTable(rows, showAdminTools) {
-  const empty = `<tr><td colspan="${showAdminTools ? 7 : 6}">No hay registros para mostrar.</td></tr>`;
+function renderTable(rows) {
+  const empty = `<tr><td colspan="6">No hay registros para mostrar.</td></tr>`;
   return `
     <div class="table-wrap">
       <table>
@@ -307,18 +307,17 @@ function renderTable(rows, showAdminTools) {
             <th>Semana</th>
             <th>Operador</th>
             <th>Ver más</th>
-            ${showAdminTools ? "<th>Acciones</th>" : ""}
           </tr>
         </thead>
         <tbody>
-          ${rows.length ? rows.map((row) => tableRow(row, showAdminTools)).join("") : empty}
+          ${rows.length ? rows.map((row) => tableRow(row)).join("") : empty}
         </tbody>
       </table>
     </div>
   `;
 }
 
-function tableRow(row, showAdminTools) {
+function tableRow(row) {
   return `
     <tr>
       <td>${formatDate(row.capture_date)}</td>
@@ -327,21 +326,13 @@ function tableRow(row, showAdminTools) {
       <td>${row.week}</td>
       <td>${row.operator}</td>
       <td><button class="mini-action" data-detail="${row.id}" type="button">Ver más</button></td>
-      ${showAdminTools ? `<td><div class="row-actions"><button class="mini-action edit" data-edit="${row.id}" type="button">Editar</button><button class="mini-action delete" data-delete="${row.id}" type="button">Eliminar</button></div></td>` : ""}
     </tr>
   `;
 }
 
-function bindTableActions(showAdminTools, container) {
+function bindTableActions(container) {
   container.querySelectorAll("[data-detail]").forEach((button) => {
     button.addEventListener("click", () => showDetail(button.dataset.detail));
-  });
-  if (!showAdminTools) return;
-  container.querySelectorAll("[data-edit]").forEach((button) => {
-    button.addEventListener("click", () => editMeasurement(button.dataset.edit));
-  });
-  container.querySelectorAll("[data-delete]").forEach((button) => {
-    button.addEventListener("click", () => deleteMeasurement(button.dataset.delete));
   });
 }
 
@@ -382,7 +373,7 @@ function renderOperatorView() {
         <label>Rol<select id="operatorRole" required><option value="administrador" ${editingOperator?.role === "administrador" ? "selected" : ""}>Administrador</option><option value="operador" ${editingOperator?.role === "operador" ? "selected" : ""}>Operador</option></select></label>
         <div class="form-actions">
           ${editingOperator ? `<button id="cancelOperatorEditBtn" class="ghost-action" type="button">Cancelar</button>` : ""}
-          <button class="primary-action" type="submit">${editingOperator ? "Actualizar operador" : "Guardar operador"}</button>
+          <button class="primary-action save-action" type="submit">${editingOperator ? "Actualizar operador" : "Guardar operador"}</button>
         </div>
       </form>
     </section>
@@ -390,7 +381,7 @@ function renderOperatorView() {
       <div class="panel-header"><h3>Usuarios registrados</h3></div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Nombre</th><th>Número de empleado</th><th>Usuario</th><th>Rol</th><th>Acciones</th></tr></thead>
+          <thead><tr><th>Nombre</th><th>Número de empleado</th><th>Usuario</th><th>Rol</th></tr></thead>
           <tbody>${state.operators.map(operatorRow).join("")}</tbody>
         </table>
       </div>
@@ -407,26 +398,15 @@ function renderOperatorView() {
     state.editingOperatorId = null;
     renderOperatorView();
   });
-  document.querySelectorAll("[data-edit-operator]").forEach((button) => {
-    button.addEventListener("click", () => {
-      state.editingOperatorId = button.dataset.editOperator;
-      renderOperatorView();
-    });
-  });
-  document.querySelectorAll("[data-delete-operator]").forEach((button) => {
-    button.addEventListener("click", () => deleteOperator(button.dataset.deleteOperator));
-  });
 }
 
 function operatorRow(operator) {
-  const protectedUser = operator.id === state.currentUser.id || operator.username === "admin";
   return `
     <tr>
       <td>${operator.full_name}</td>
       <td>${operator.employee_number}</td>
       <td>${operator.username}</td>
       <td>${roleLabel(operator.role)}</td>
-      <td><div class="row-actions"><button class="mini-action edit" data-edit-operator="${operator.id}" type="button">Editar</button>${protectedUser ? "" : `<button class="mini-action delete" data-delete-operator="${operator.id}" type="button">Eliminar</button>`}</div></td>
     </tr>
   `;
 }
@@ -507,7 +487,7 @@ function renderMeasurementFormView(prefill = null) {
         <label>Amperaje L3<input id="measureA3" type="number" step="0.01" value="${escapeAttr(row.amperage_l3 || "")}" required /></label>
         <div class="form-actions">
           ${editing ? `<button id="cancelEditBtn" class="ghost-action" type="button">Cancelar</button>` : ""}
-          <button class="primary-action" type="submit">${editing ? "Actualizar" : "Guardar medición"}</button>
+          <button class="primary-action save-action" type="submit">${editing ? "Actualizar" : "Guardar medición"}</button>
         </div>
       </form>
     </section>
@@ -578,13 +558,16 @@ function renderStatsView() {
   const container = document.getElementById("statsView");
   container.innerHTML = `
     <section class="panel">
-      <div class="panel-header"><h3>Filtros de estadísticas</h3></div>
+      <div class="panel-header">
+        <h3>Filtros de estadísticas</h3>
+        <button id="clearStatsFiltersBtn" class="secondary-action" type="button">Limpiar filtros</button>
+      </div>
       <div class="filters">
-        ${selectHtml("statsLine", "Línea", getLines(), state.filters.stats.line, true)}
-        ${selectHtml("statsComponent", "Componente", COMPONENTS, state.filters.stats.component, true)}
-        ${selectHtml("statsWeek", "Semana", weeks(), state.filters.stats.week, true)}
-        ${selectHtml("statsYear", "Año", [...new Set(state.measurements.map((row) => row.year).filter(Boolean))].sort(), state.filters.stats.year, true)}
-        ${selectHtml("statsOperator", "Operador", state.operators.map((operator) => operator.full_name), state.filters.stats.operator, true)}
+        ${selectHtml("statsLine", "Línea", getLines(), state.filters.stats.line, true, "Todas las líneas")}
+        ${selectHtml("statsComponent", "Componente", COMPONENTS, state.filters.stats.component, true, "Todos los componentes")}
+        ${selectHtml("statsWeek", "Semana", weeks(), state.filters.stats.week, true, "Todas las semanas")}
+        ${selectHtml("statsYear", "Año", [...new Set(state.measurements.map((row) => row.year).filter(Boolean))].sort(), state.filters.stats.year, true, "Todos los años")}
+        ${selectHtml("statsOperator", "Operador", state.operators.map((operator) => operator.full_name), state.filters.stats.operator, true, "Todos los operadores")}
       </div>
     </section>
     <section class="chart-grid">
@@ -599,6 +582,10 @@ function renderStatsView() {
       state.filters.stats[key.toLowerCase()] = event.target.value;
       drawCharts();
     });
+  });
+  document.getElementById("clearStatsFiltersBtn").addEventListener("click", () => {
+    state.filters.stats = { line: "", component: "", week: "", year: "", operator: "" };
+    renderStatsView();
   });
   drawCharts();
 }
@@ -753,10 +740,10 @@ function weeks() {
   return Array.from({ length: 52 }, (_, index) => String(index + 1));
 }
 
-function selectHtml(id, label, options, value, includeAll) {
+function selectHtml(id, label, options, value, includeAll, allLabel = null) {
   const field = `
     <select id="${id}" data-filter="${id === "line" || id === "component" || id === "week" || id === "operator" ? id : ""}" required>
-      ${includeAll ? `<option value="">${label || "Todos"}</option>` : `<option value="">Selecciona</option>`}
+      ${includeAll ? `<option value="">${allLabel || label || "Todos"}</option>` : `<option value="">Selecciona</option>`}
       ${options.map((option) => `<option value="${escapeAttr(option)}" ${String(value) === String(option) ? "selected" : ""}>${option}</option>`).join("")}
     </select>
   `;
