@@ -160,6 +160,12 @@ input:disabled {
   background: var(--ink);
 }
 
+.save-action {
+  min-height: 30px;
+  padding: 6px 12px;
+  font-size: var(--font-small);
+}
+
 .secondary-action {
   color: var(--ink);
   background: #e6e9ec;
