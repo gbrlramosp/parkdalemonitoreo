@@ -41,6 +41,17 @@ button {
   cursor: pointer;
 }
 
+.ui-icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.9;
+}
+
 .hidden {
   display: none !important;
 }
@@ -145,6 +156,10 @@ input:disabled {
 .secondary-action,
 .danger-action,
 .ghost-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
   min-height: var(--button-height);
   border: 0;
   border-radius: 999px;
@@ -243,8 +258,8 @@ button.primary-action.save-action {
 }
 
 .sidebar-brand img {
-  width: 72px;
-  height: 72px;
+  width: 88px;
+  height: 88px;
   object-fit: contain;
   filter: brightness(0) invert(1);
 }
@@ -252,7 +267,7 @@ button.primary-action.save-action {
 .sidebar-brand .brand-title {
   display: block;
   font-size: var(--font-base);
-  font-weight: 300;
+  font-weight: 700;
 }
 
 .sidebar-brand span {
@@ -268,6 +283,9 @@ button.primary-action.save-action {
 
 .nav-item,
 .logout-button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
   min-height: var(--button-height);
   border: 0;
   border-radius: 999px;
@@ -287,6 +305,7 @@ button.primary-action.save-action {
 
 .logout-button {
   border: 1px solid rgba(255, 255, 255, 0.16);
+  justify-content: center;
   text-align: center;
 }
 
@@ -361,20 +380,51 @@ button.primary-action.save-action {
 }
 
 .info-card {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  min-height: 108px;
   padding: 18px;
 }
 
+.card-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 0;
+  border-radius: 10px;
+  color: var(--white);
+  background: var(--panel);
+}
+
+.card-icon .ui-icon {
+  width: 21px;
+  height: 21px;
+  flex-basis: 21px;
+}
+
+.card-info {
+  min-width: 0;
+}
+
 .info-card span {
+  display: block;
   color: var(--muted);
   font-size: var(--font-small);
-  font-weight: 300;
+  font-weight: 400;
+  line-height: 1.25;
+  margin-top: 5px;
 }
 
 .info-card strong {
   display: block;
-  margin-top: 8px;
-  font-size: 24px;
-  font-weight: 300;
+  color: var(--ink);
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.05;
+  white-space: nowrap;
 }
 
 .panel {
@@ -441,6 +491,10 @@ tr:last-child td {
 }
 
 .mini-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   min-height: var(--button-height);
   border: 0;
   border-radius: 999px;
@@ -528,41 +582,40 @@ tr:last-child td {
   position: absolute;
   top: 12px;
   right: 14px;
+  display: inline-grid;
+  place-items: center;
   width: 34px;
   height: 34px;
   border: 0;
   border-radius: 50%;
   color: var(--white);
   background: var(--ink);
-  font-size: 18px;
-  line-height: 1;
 }
 
 .detail-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: 16px;
   margin-top: 18px;
 }
 
-.detail-item {
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 11px;
-}
-
-.detail-item span {
-  display: block;
+.readonly-form label {
   color: var(--muted);
-  font-size: var(--font-small);
-  font-weight: 300;
+  font-size: var(--font-base);
+  font-weight: 400;
 }
 
-.detail-item strong {
-  display: block;
-  margin-top: 5px;
-  overflow-wrap: anywhere;
-  font-weight: 300;
+.readonly-form input:disabled {
+  border-color: #d6dbe0;
+  color: var(--ink);
+  background: #f3f5f7;
+  cursor: default;
+  opacity: 1;
+}
+
+.readonly-form input {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .toast {
