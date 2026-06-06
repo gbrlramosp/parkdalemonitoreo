@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Monitoreo de Máquinas | Hilos de Yecapixtla</title>
+    <title>Hilos de Yecapixtla | Monitoreo de máquinas</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -13,7 +13,7 @@
           <img src="images/parkdale-logo.png" alt="Logo Hilos de Yecapixtla" />
           <div>
             <h1>Hilos de Yecapixtla</h1>
-            <p>Monitoreo de Máquinas</p>
+            <p>Monitoreo de máquinas</p>
           </div>
         </div>
 
@@ -32,8 +32,9 @@
               <path d="M10 17l5-5-5-5" />
               <path d="M15 12H3" />
             </svg>
-            <span>Iniciar Sesión</span>
+            <span>Iniciar sesión</span>
           </button>
+          <p id="loginHint" class="login-hint">Usuario inicial: admin | Contraseña: admin</p>
         </form>
       </section>
     </main>
@@ -44,7 +45,7 @@
           <img src="images/parkdale-logo.png" alt="Logo Hilos de Yecapixtla" />
           <div>
             <span class="brand-title">Hilos de Yecapixtla</span>
-            <span>Monitoreo de Máquinas</span>
+            <span>Monitoreo de máquinas</span>
           </div>
         </div>
         <nav id="navMenu" class="nav-menu"></nav>
@@ -52,7 +53,14 @@
           <span id="currentUserName"></span>
           <small id="currentUserRole"></small>
         </div>
-        <button id="logoutBtn" class="logout-button" type="button">Cerrar Sesión</button>
+        <button id="logoutBtn" class="logout-button" type="button">
+          <svg class="ui-icon" aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+            <path d="M10 17l5-5-5-5" />
+            <path d="M15 12H3" />
+          </svg>
+          <span>Cerrar sesión</span>
+        </button>
       </aside>
 
       <section class="main-area">
@@ -80,7 +88,12 @@
 
     <dialog id="detailModal" class="detail-modal">
       <form method="dialog">
-        <button class="modal-close" aria-label="Cerrar">x</button>
+        <button class="modal-close" aria-label="Cerrar">
+          <svg class="ui-icon" aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        </button>
       </form>
       <div id="modalContent"></div>
     </dialog>
