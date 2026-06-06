@@ -10,7 +10,7 @@
   --warning: #b7791f;
   --shadow: 0 20px 60px rgba(33, 37, 41, 0.14);
   --shadow-lg: 0 18px 55px rgba(8, 36, 61, 0.18);
-  --sidebar-w: 260px;
+  --sidebar-w: 253px;
   --font-base: 14px;
   --font-small: 12px;
   --font-title: 22px;
@@ -308,62 +308,72 @@ button.primary-action.save-action {
 
 .sidebar-brand {
   align-items: center;
-  gap: 8px;
-  padding: 24px 20px 20px;
+  gap: 10px;
+  padding: 24px 16px 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   text-align: center;
 }
 
 .sidebar-brand img {
-  width: 162px;
-  height: 56px;
-  max-height: 56px;
+  width: 154px;
+  height: auto;
+  max-height: 62px;
   object-fit: contain;
-  padding: 7px;
-  border-radius: 4px;
+  padding: 0;
+  border-radius: 0;
   filter: brightness(0) invert(1);
 }
 
 .sidebar-brand .brand-title {
   display: block;
   color: var(--white);
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 700;
   line-height: 1.2;
 }
 
 .sidebar-brand span {
+  display: block;
+  margin-top: 5px;
   color: rgba(255, 255, 255, 0.6);
-  font-size: 14px;
-  letter-spacing: 0;
+  font-size: 13px;
+  letter-spacing: 0.2px;
   text-transform: none;
 }
 
 .nav-menu {
-  display: grid;
-  gap: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   flex: 1;
   margin-top: 0;
-  padding: 16px 12px;
+  padding: 16px 10px;
   overflow-y: auto;
+  align-content: flex-start;
 }
 
 .nav-item,
 .logout-button {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   min-height: auto;
   border: 0;
-  border-radius: 10px;
-  padding: 7px 14px;
+  border-radius: 12px;
+  padding: 9px 12px;
   color: rgba(255, 255, 255, 0.72);
   background: transparent;
   text-align: left;
-  font-size: var(--font-base);
+  font-size: 14px;
   font-weight: 400;
-  line-height: normal;
-  margin-bottom: 4px;
+  line-height: 1.15;
+  margin-bottom: 0;
+}
+
+.nav-item .ui-icon {
+  width: 18px;
+  height: 18px;
+  flex-basis: 18px;
 }
 
 .nav-item:hover {
@@ -381,16 +391,36 @@ button.primary-action.save-action {
   border: 1px solid rgba(255, 255, 255, 0.16);
   justify-content: center;
   text-align: center;
-  margin: 0 20px 16px;
+  width: auto;
+  min-height: 40px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 13px;
+  margin: 0 16px 16px;
+  transition: background 0.2s, transform 0.1s, border-color 0.2s;
+}
+
+.logout-button:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateY(-1px);
+}
+
+.logout-button .ui-icon {
+  width: 16px;
+  height: 16px;
+  flex-basis: 16px;
 }
 
 .sidebar-user {
   display: grid;
-  gap: 3px;
-  margin: auto 20px 10px;
+  gap: 0;
+  margin: auto 16px 12px;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 16px;
-  padding: 11px 12px;
+  border-radius: 12px;
+  padding: 10px;
   color: rgba(255, 255, 255, 0.86);
   background: rgba(255, 255, 255, 0.05);
   text-align: center;
@@ -398,22 +428,29 @@ button.primary-action.save-action {
 
 .sidebar-user span,
 .sidebar-user small {
-  overflow-wrap: anywhere;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .sidebar-user span {
-  font-size: var(--font-base);
-  font-weight: 400;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .sidebar-user small {
+  margin-top: 3px;
   color: rgba(255, 255, 255, 0.64);
-  font-size: var(--font-small);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
 }
 
 .main-area {
   min-width: 0;
-  padding: 28px;
+  padding: 34px;
 }
 
 .topbar {
@@ -733,13 +770,21 @@ tr:last-child td {
   background: currentColor;
 }
 
-@media (max-width: 1060px) {
+@media (max-width: 1100px) {
   :root {
-    --sidebar-w: 220px;
+    --sidebar-w: 233px;
   }
 
   .app-shell {
     grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+  }
+
+  .sidebar-brand img {
+    width: 132px;
+  }
+
+  .main-area {
+    padding: 26px;
   }
 
   .dashboard-cards,
@@ -765,13 +810,58 @@ tr:last-child td {
   .sidebar {
     position: fixed;
     z-index: 15;
+    top: 0;
     left: -290px;
     width: 280px;
+    height: 100vh;
+    display: flex;
+    overflow: visible;
     transition: left 0.2s ease;
   }
 
   .sidebar.open {
     left: 0;
+  }
+
+  .sidebar-brand,
+  .logout-button {
+    display: flex;
+  }
+
+  .sidebar-user {
+    display: grid;
+  }
+
+  .nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    height: auto;
+    padding: 16px 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .nav-item {
+    min-width: 0;
+    flex: none;
+    justify-content: flex-start;
+    flex-direction: row;
+    gap: 10px;
+    padding: 9px 12px;
+    margin-bottom: 0;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.2;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .nav-item .ui-icon {
+    width: 18px;
+    height: 18px;
+    flex-basis: 18px;
   }
 
   .main-area {
@@ -821,5 +911,17 @@ tr:last-child td {
 
   .topbar {
     gap: 12px;
+  }
+}
+
+@media (max-width: 460px) {
+  .nav-item {
+    min-width: 0;
+    font-size: 14px;
+  }
+
+  .main-area {
+    padding-left: 10px;
+    padding-right: 10px;
   }
 }
