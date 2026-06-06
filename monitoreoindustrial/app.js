@@ -49,9 +49,9 @@ const state = {
 
 const navItems = [
   { id: "home", label: "Inicio", icon: "home", subtitle: "Registros del día y concentrado operativo", roles: ["administrador", "operador"] },
-  { id: "operator", label: "Agregar operador", icon: "userPlus", subtitle: "Alta y administración de usuarios", roles: ["administrador"] },
-  { id: "measurement", label: "Nueva medición", icon: "gauge", subtitle: "Captura de registros de máquinas", roles: ["administrador", "operador"] },
-  { id: "consult", label: "Consultar mediciones", icon: "table", subtitle: "Histórico completo de mediciones", roles: ["administrador", "operador"] },
+  { id: "operator", label: "Agregar Operador", icon: "userPlus", subtitle: "Alta y administración de usuarios", roles: ["administrador"] },
+  { id: "measurement", label: "Nueva Medición", icon: "gauge", subtitle: "Captura de registros de máquinas", roles: ["administrador", "operador"] },
+  { id: "consult", label: "Consultar Mediciones", icon: "table", subtitle: "Histórico completo de mediciones", roles: ["administrador", "operador"] },
   { id: "stats", label: "Estadísticas", icon: "chart", subtitle: "Gráficas por línea, componente y semana", roles: ["administrador"] }
 ];
 
