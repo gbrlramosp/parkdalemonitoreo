@@ -9,6 +9,8 @@
   --danger: #b42318;
   --warning: #b7791f;
   --shadow: 0 20px 60px rgba(33, 37, 41, 0.14);
+  --shadow-lg: 0 18px 55px rgba(8, 36, 61, 0.18);
+  --sidebar-w: 260px;
   --font-base: 14px;
   --font-small: 12px;
   --font-title: 22px;
@@ -58,20 +60,30 @@ button {
 
 .login-screen {
   min-height: 100vh;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
   padding: 24px;
   background:
     linear-gradient(135deg, rgba(33, 37, 41, 0.92), rgba(73, 80, 87, 0.88)),
     url("images/parkdale-logo.png") center / 360px no-repeat;
 }
 
+.login-screen::before {
+  content: none;
+}
+
 .login-panel {
-  width: min(100%, 420px);
-  background: var(--white);
+  position: relative;
+  z-index: 1;
+  width: min(390px, calc(100vw - 32px));
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.377);
   border-radius: 18px;
-  padding: 34px 30px 28px;
-  box-shadow: var(--shadow);
+  padding: 31px 34px;
+  box-shadow: var(--shadow-lg);
 }
 
 .brand-lockup,
@@ -83,19 +95,36 @@ button {
   text-align: center;
 }
 
+.brand-lockup {
+  margin-bottom: 28px;
+}
+
 .brand-lockup img {
-  width: 104px;
-  height: 104px;
+  display: block;
+  width: 220px;
+  max-width: 82%;
+  height: auto;
   object-fit: contain;
+  margin: 0 auto 14px;
 }
 
 .brand-lockup h1 {
-  margin: 4px 0 0;
-  font-size: 24px;
-  font-weight: 400;
+  margin: 0;
+  color: #08243d;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.2;
 }
 
-.brand-lockup p,
+.brand-lockup p {
+  margin: 4px 0 0;
+  color: #2d5f8a;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
 .sidebar-brand span,
 .topbar p {
   margin: 4px 0 0;
@@ -104,7 +133,7 @@ button {
 }
 
 .compact-form {
-  margin-top: 30px;
+  margin-top: 0;
 }
 
 .form-grid {
@@ -126,6 +155,24 @@ label {
   color: var(--muted);
   font-size: var(--font-base);
   font-weight: 400;
+}
+
+.compact-form label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 7px;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.compact-form input {
+  min-height: 38px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 15px;
 }
 
 input,
@@ -212,9 +259,16 @@ button.primary-action.save-action {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  width: fit-content;
+  width: 100%;
   justify-self: center;
-  padding-inline: 18px;
+  min-height: 40px;
+  margin-top: 18px;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 500;
+  background: var(--ink);
+  box-shadow: 0 10px 24px rgba(8, 36, 61, 0.22);
 }
 
 .login-action svg {
@@ -237,7 +291,7 @@ button.primary-action.save-action {
 .app-shell {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: clamp(230px, 18vw, 270px) minmax(0, 1fr);
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
 }
 
 .sidebar {
@@ -246,74 +300,94 @@ button.primary-action.save-action {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 18px;
+  padding: 0;
   color: var(--white);
   background: var(--ink);
+  box-shadow: none;
 }
 
 .sidebar-brand {
-  gap: 12px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  align-items: center;
+  gap: 8px;
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
 }
 
 .sidebar-brand img {
-  width: 88px;
-  height: 88px;
+  width: 162px;
+  height: 56px;
+  max-height: 56px;
   object-fit: contain;
+  padding: 7px;
+  border-radius: 4px;
   filter: brightness(0) invert(1);
 }
 
 .sidebar-brand .brand-title {
   display: block;
-  font-size: var(--font-base);
+  color: var(--white);
+  font-size: 16px;
   font-weight: 700;
+  line-height: 1.2;
 }
 
 .sidebar-brand span {
-  color: rgba(255, 255, 255, 0.72);
-  font-size: var(--font-small);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .nav-menu {
   display: grid;
-  gap: 7px;
-  margin-top: 22px;
+  gap: 0;
+  flex: 1;
+  margin-top: 0;
+  padding: 16px 12px;
+  overflow-y: auto;
 }
 
 .nav-item,
 .logout-button {
   display: flex;
   align-items: center;
-  gap: 9px;
-  min-height: var(--button-height);
+  gap: 12px;
+  min-height: auto;
   border: 0;
-  border-radius: 999px;
-  padding: var(--button-padding);
-  color: rgba(255, 255, 255, 0.78);
+  border-radius: 10px;
+  padding: 7px 14px;
+  color: rgba(255, 255, 255, 0.72);
   background: transparent;
   text-align: left;
   font-size: var(--font-base);
-  font-weight: 300;
+  font-weight: 400;
+  line-height: normal;
+  margin-bottom: 4px;
 }
 
-.nav-item.active,
 .nav-item:hover {
   color: var(--white);
-  background: var(--panel);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-item.active {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
 }
 
 .logout-button {
   border: 1px solid rgba(255, 255, 255, 0.16);
   justify-content: center;
   text-align: center;
+  margin: 0 20px 16px;
 }
 
 .sidebar-user {
   display: grid;
   gap: 3px;
-  margin-top: auto;
-  margin-bottom: 10px;
+  margin: auto 20px 10px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 16px;
   padding: 11px 12px;
@@ -339,21 +413,28 @@ button.primary-action.save-action {
 
 .main-area {
   min-width: 0;
-  padding: clamp(16px, 2vw, 26px);
+  padding: 28px;
 }
 
 .topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 18px;
-  margin-bottom: 20px;
+  gap: 10px;
+  margin-bottom: 16px;
 }
 
 .topbar h2 {
   margin: 0;
-  font-size: var(--font-title);
-  font-weight: 600;
+  color: #08243d;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.topbar p {
+  margin-top: 4px;
+  color: #6b7280;
+  font-size: 14px;
 }
 
 .view {
@@ -653,8 +734,12 @@ tr:last-child td {
 }
 
 @media (max-width: 1060px) {
+  :root {
+    --sidebar-w: 220px;
+  }
+
   .app-shell {
-    grid-template-columns: 230px minmax(0, 1fr);
+    grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
   }
 
   .dashboard-cards,
@@ -720,12 +805,13 @@ tr:last-child td {
 
 @media (max-width: 520px) {
   .login-panel {
-    padding: 28px 20px 24px;
+    padding: 32px 22px;
+    border-radius: 16px;
   }
 
   .brand-lockup img {
-    width: 82px;
-    height: 82px;
+    width: 190px;
+    height: auto;
   }
 
   .panel,
