@@ -49,9 +49,9 @@ const state = {
 
 const navItems = [
   { id: "home", label: "Inicio", icon: "home", subtitle: "Registros del día y concentrado operativo", roles: ["administrador", "operador"] },
-  { id: "operator", label: "Agregar Operador", icon: "userPlus", subtitle: "Alta y administración de usuarios", roles: ["administrador"] },
-  { id: "measurement", label: "Nueva Medición", icon: "gauge", subtitle: "Captura de registros de máquinas", roles: ["administrador", "operador"] },
-  { id: "consult", label: "Consultar Mediciones", icon: "table", subtitle: "Histórico completo de mediciones", roles: ["administrador", "operador"] },
+  { id: "operator", label: "Agregar operador", icon: "userPlus", subtitle: "Alta y administración de usuarios", roles: ["administrador"] },
+  { id: "measurement", label: "Nueva medición", icon: "gauge", subtitle: "Captura de registros de máquinas", roles: ["administrador", "operador"] },
+  { id: "consult", label: "Consultar mediciones", icon: "table", subtitle: "Histórico completo de mediciones", roles: ["administrador", "operador"] },
   { id: "stats", label: "Estadísticas", icon: "chart", subtitle: "Gráficas por línea, componente y semana", roles: ["administrador"] }
 ];
 
@@ -297,13 +297,14 @@ function getCards(rows) {
 
 function renderFilters(filterKey) {
   const filters = state.filters[filterKey];
+  const operators = getOperatorFilterOptions();
   return `
     <div class="filters">
       <input data-filter="search" placeholder="Buscar por texto" value="${escapeAttr(filters.search)}" />
       ${selectHtml("line", "Línea", getLines(), filters.line, true)}
       ${selectHtml("component", "Componente", COMPONENTS, filters.component, true)}
       ${selectHtml("week", "Semana", weeks(), filters.week, true)}
-      ${selectHtml("operator", "Operador", state.operators.map((operator) => operator.full_name), filters.operator, true)}
+      ${selectHtml("operator", "Operador", operators, getOperatorFilterValue(filters.operator), true)}
     </div>
   `;
 }
@@ -361,7 +362,7 @@ function bindTableActions(container) {
 }
 
 function showDetail(id) {
-  const row = state.measurements.find((measurement) => measurement.id === id);
+  const row = getVisibleMeasurements().find((measurement) => measurement.id === id);
   if (!row) return;
   const fields = [
     ["Fecha de captura", formatDate(row.capture_date)],
@@ -589,6 +590,7 @@ async function deleteMeasurement(id) {
 }
 
 function renderStatsView() {
+  const operators = getOperatorFilterOptions();
   const container = document.getElementById("statsView");
   container.innerHTML = `
     <section class="panel">
@@ -601,7 +603,7 @@ function renderStatsView() {
         ${selectHtml("statsComponent", "Componente", COMPONENTS, state.filters.stats.component, true, "Todos los componentes")}
         ${selectHtml("statsWeek", "Semana", weeks(), state.filters.stats.week, true, "Todas las semanas")}
         ${selectHtml("statsYear", "Año", [...new Set(state.measurements.map((row) => row.year).filter(Boolean))].sort(), state.filters.stats.year, true, "Todos los años")}
-        ${selectHtml("statsOperator", "Operador", state.operators.map((operator) => operator.full_name), state.filters.stats.operator, true, "Todos los operadores")}
+        ${selectHtml("statsOperator", "Operador", operators, getOperatorFilterValue(state.filters.stats.operator), true, "Todos los operadores")}
       </div>
     </section>
     <section class="chart-grid">
@@ -717,14 +719,14 @@ function baseChartOptions() {
 function getFilteredMeasurements(filterKey, todayOnly) {
   const filters = state.filters[filterKey];
   const today = localDateKey(new Date());
-  return state.measurements.filter((row) => {
+  return getVisibleMeasurements().filter((row) => {
     const text = `${row.capture_date} ${row.line} ${row.component} ${row.week} ${row.operator}`.toLowerCase();
     return (!todayOnly || localDateKey(row.capture_date) === today)
       && (!filters.search || text.includes(filters.search.toLowerCase()))
       && (!filters.line || row.line === filters.line)
       && (!filters.component || row.component === filters.component)
       && (!filters.week || String(row.week) === String(filters.week))
-      && (!filters.operator || row.operator === filters.operator);
+      && (state.currentUser.role !== "administrador" || !filters.operator || row.operator === filters.operator);
   });
 }
 
@@ -738,13 +740,42 @@ function localDateKey(date) {
 
 function getStatsRows() {
   const filters = state.filters.stats;
-  return state.measurements.filter((row) => (
+  return getVisibleMeasurements().filter((row) => (
     (!filters.line || row.line === filters.line)
     && (!filters.component || row.component === filters.component)
     && (!filters.week || String(row.week) === String(filters.week))
     && (!filters.year || String(row.year) === String(filters.year))
-    && (!filters.operator || row.operator === filters.operator)
+    && (state.currentUser.role !== "administrador" || !filters.operator || row.operator === filters.operator)
   ));
+}
+
+function getVisibleMeasurements() {
+  if (!state.currentUser || state.currentUser.role === "administrador") {
+    return state.measurements;
+  }
+
+  return state.measurements.filter((row) => isOwnMeasurement(row));
+}
+
+function isOwnMeasurement(row) {
+  if (!state.currentUser) return false;
+  return row.operator_id === state.currentUser.id || row.operator === state.currentUser.full_name;
+}
+
+function getOperatorFilterOptions() {
+  if (!state.currentUser || state.currentUser.role === "administrador") {
+    return state.operators.map((operator) => operator.full_name);
+  }
+
+  return [state.currentUser.full_name];
+}
+
+function getOperatorFilterValue(value) {
+  if (!state.currentUser || state.currentUser.role === "administrador") {
+    return value;
+  }
+
+  return state.currentUser.full_name;
 }
 
 function groupCount(rows, key) {
