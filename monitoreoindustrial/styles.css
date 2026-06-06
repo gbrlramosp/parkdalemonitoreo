@@ -180,7 +180,7 @@ select {
   width: 100%;
   min-height: 38px;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 18px;
   padding: 8px 12px;
   color: var(--ink);
   background: var(--white);
@@ -263,7 +263,7 @@ button.primary-action.save-action {
   justify-self: center;
   min-height: 40px;
   margin-top: 18px;
-  border-radius: 10px;
+  border-radius: 18px;
   padding: 14px;
   font-size: 15px;
   font-weight: 500;
