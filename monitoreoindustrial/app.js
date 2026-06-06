@@ -48,12 +48,36 @@ const state = {
 };
 
 const navItems = [
-  { id: "home", label: "Inicio", subtitle: "Registros del día y concentrado operativo", roles: ["administrador", "operador"] },
-  { id: "operator", label: "Agregar operador", subtitle: "Alta y administración de usuarios", roles: ["administrador"] },
-  { id: "measurement", label: "Nueva medición", subtitle: "Captura de registros de máquinas", roles: ["administrador", "operador"] },
-  { id: "consult", label: "Consultar mediciones", subtitle: "Histórico completo de mediciones", roles: ["administrador", "operador"] },
-  { id: "stats", label: "Estadísticas", subtitle: "Gráficas por línea, componente y semana", roles: ["administrador"] }
+  { id: "home", label: "Inicio", icon: "home", subtitle: "Registros del día y concentrado operativo", roles: ["administrador", "operador"] },
+  { id: "operator", label: "Agregar operador", icon: "userPlus", subtitle: "Alta y administración de usuarios", roles: ["administrador"] },
+  { id: "measurement", label: "Nueva medición", icon: "gauge", subtitle: "Captura de registros de máquinas", roles: ["administrador", "operador"] },
+  { id: "consult", label: "Consultar mediciones", icon: "table", subtitle: "Histórico completo de mediciones", roles: ["administrador", "operador"] },
+  { id: "stats", label: "Estadísticas", icon: "chart", subtitle: "Gráficas por línea, componente y semana", roles: ["administrador"] }
 ];
+
+const icons = {
+  home: '<path d="M3 11.5 12 4l9 7.5"/><path d="M5 10.5V20h14v-9.5"/><path d="M9 20v-6h6v6"/>',
+  userPlus: '<path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M19 8v6"/><path d="M16 11h6"/>',
+  gauge: '<path d="M4 14a8 8 0 1 1 16 0"/><path d="M12 14l4-4"/><path d="M7 14h.01"/><path d="M17 14h.01"/><path d="M12 6v.01"/>',
+  table: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M9 4v16"/><path d="M15 4v16"/>',
+  chart: '<path d="M4 19V5"/><path d="M4 19h16"/><rect x="7" y="11" width="3" height="5" rx="1"/><rect x="12" y="8" width="3" height="8" rx="1"/><rect x="17" y="6" width="3" height="10" rx="1"/>',
+  download: '<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>',
+  chevronLeft: '<path d="m15 18-6-6 6-6"/>',
+  chevronRight: '<path d="m9 18 6-6-6-6"/>',
+  eye: '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z"/><circle cx="12" cy="12" r="3"/>',
+  save: '<path d="M5 3h12l2 2v16H5z"/><path d="M8 3v6h8V3"/><path d="M8 21v-7h8v7"/>',
+  x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  filterX: '<path d="M3 5h18l-7 8v4l-4 2v-6Z"/><path d="m16 16 5 5"/><path d="m21 16-5 5"/>',
+  calendar: '<path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/>',
+  lines: '<path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h10"/>',
+  component: '<rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 2v3"/><path d="M15 2v3"/><path d="M9 19v3"/><path d="M15 19v3"/><path d="M2 9h3"/><path d="M2 15h3"/><path d="M19 9h3"/><path d="M19 15h3"/>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  clipboard: '<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>'
+};
+
+function icon(name, className = "ui-icon") {
+  return `<svg class="${className}" aria-hidden="true" viewBox="0 0 24 24">${icons[name] || ""}</svg>`;
+}
 
 const dom = {};
 
@@ -180,7 +204,7 @@ function renderApp() {
 function renderNav() {
   dom.navMenu.innerHTML = navItems
     .filter((item) => item.roles.includes(state.currentUser.role))
-    .map((item) => `<button class="nav-item ${state.activeView === item.id ? "active" : ""}" data-view="${item.id}" type="button">${item.label}</button>`)
+    .map((item) => `<button class="nav-item ${state.activeView === item.id ? "active" : ""}" data-view="${item.id}" type="button">${icon(item.icon)}<span>${item.label}</span></button>`)
     .join("");
 
   dom.navMenu.querySelectorAll(".nav-item").forEach((button) => {
@@ -225,22 +249,22 @@ function renderMeasurementTableView(containerId, filterKey, todayOnly) {
 
   container.innerHTML = `
     <div class="dashboard-cards">
-      ${infoCard("Registros", cards.total)}
-      ${infoCard("Líneas activas", cards.lines)}
-      ${infoCard("Componentes", cards.components)}
-      ${infoCard("Operadores", cards.operators)}
+      ${infoCard("Registros", cards.total, "clipboard")}
+      ${infoCard("Líneas activas", cards.lines, "lines")}
+      ${infoCard("Componentes", cards.components, "component")}
+      ${infoCard("Operadores", cards.operators, "users")}
     </div>
     <section class="panel">
       <div class="panel-header">
         <h3>${todayOnly ? "Registros del día" : "Todas las mediciones"}</h3>
-        ${showDownload ? `<button id="downloadExcelBtn" class="secondary-action" type="button">Descargar Excel</button>` : ""}
+        ${showDownload ? `<button id="downloadExcelBtn" class="secondary-action" type="button">${icon("download")}<span>Descargar Excel</span></button>` : ""}
       </div>
       ${renderFilters(filterKey)}
       ${renderTable(pageRows)}
       <div class="pagination">
-        <button class="secondary-action" id="${filterKey}Prev" type="button">Anterior</button>
+        <button class="secondary-action" id="${filterKey}Prev" type="button">${icon("chevronLeft")}<span>Anterior</span></button>
         <span>Página ${page} de ${totalPages}</span>
-        <button class="secondary-action" id="${filterKey}Next" type="button">Siguiente</button>
+        <button class="secondary-action" id="${filterKey}Next" type="button"><span>Siguiente</span>${icon("chevronRight")}</button>
       </div>
     </section>
   `;
@@ -258,8 +282,8 @@ function renderMeasurementTableView(containerId, filterKey, todayOnly) {
   document.getElementById("downloadExcelBtn")?.addEventListener("click", downloadExcel);
 }
 
-function infoCard(label, value) {
-  return `<article class="info-card"><span>${label}</span><strong>${value}</strong></article>`;
+function infoCard(label, value, iconName) {
+  return `<article class="info-card"><div class="card-icon">${icon(iconName)}</div><div class="card-info"><strong>${value}</strong><span>${label}</span></div></article>`;
 }
 
 function getCards(rows) {
@@ -306,7 +330,7 @@ function renderTable(rows) {
             <th>Componente</th>
             <th>Semana</th>
             <th>Operador</th>
-            <th>Ver más</th>
+            <th>Consultar</th>
           </tr>
         </thead>
         <tbody>
@@ -325,7 +349,7 @@ function tableRow(row) {
       <td>${row.component}</td>
       <td>${row.week}</td>
       <td>${row.operator}</td>
-      <td><button class="mini-action" data-detail="${row.id}" type="button">Ver más</button></td>
+      <td><button class="mini-action" data-detail="${row.id}" type="button">${icon("eye")}<span>Ver más</span></button></td>
     </tr>
   `;
 }
@@ -355,7 +379,17 @@ function showDetail(id) {
     ["Amperaje L2", row.amperage_l2],
     ["Amperaje L3", row.amperage_l3]
   ];
-  dom.modalContent.innerHTML = `<h3>Detalle de medición</h3><div class="detail-grid">${fields.map(([label, value]) => `<div class="detail-item"><span>${label}</span><strong>${value ?? ""}</strong></div>`).join("")}</div>`;
+  dom.modalContent.innerHTML = `
+    <h3>Detalle de medición</h3>
+    <div class="detail-grid readonly-form">
+      ${fields.map(([label, value]) => `
+        <label>
+          ${label}
+          <input type="text" value="${escapeAttr(value ?? "")}" disabled />
+        </label>
+      `).join("")}
+    </div>
+  `;
   dom.detailModal.showModal();
 }
 
@@ -372,8 +406,8 @@ function renderOperatorView() {
         <label>Contraseña<input id="operatorPassword" value="${escapeAttr(editingOperator?.password || "")}" disabled /></label>
         <label>Rol<select id="operatorRole" required><option value="administrador" ${editingOperator?.role === "administrador" ? "selected" : ""}>Administrador</option><option value="operador" ${editingOperator?.role === "operador" ? "selected" : ""}>Operador</option></select></label>
         <div class="form-actions">
-          ${editingOperator ? `<button id="cancelOperatorEditBtn" class="ghost-action" type="button">Cancelar</button>` : ""}
-          <button class="primary-action save-action" type="submit">${editingOperator ? "Actualizar operador" : "Guardar operador"}</button>
+          ${editingOperator ? `<button id="cancelOperatorEditBtn" class="ghost-action" type="button">${icon("x")}<span>Cancelar</span></button>` : ""}
+          <button class="primary-action save-action" type="submit">${icon("save")}<span>${editingOperator ? "Actualizar operador" : "Guardar operador"}</span></button>
         </div>
       </form>
     </section>
@@ -486,8 +520,8 @@ function renderMeasurementFormView(prefill = null) {
         <label>Amperaje L2<input id="measureA2" type="number" step="0.01" value="${escapeAttr(row.amperage_l2 || "")}" required /></label>
         <label>Amperaje L3<input id="measureA3" type="number" step="0.01" value="${escapeAttr(row.amperage_l3 || "")}" required /></label>
         <div class="form-actions">
-          ${editing ? `<button id="cancelEditBtn" class="ghost-action" type="button">Cancelar</button>` : ""}
-          <button class="primary-action save-action" type="submit">${editing ? "Actualizar" : "Guardar medición"}</button>
+          ${editing ? `<button id="cancelEditBtn" class="ghost-action" type="button">${icon("x")}<span>Cancelar</span></button>` : ""}
+          <button class="primary-action save-action" type="submit">${icon("save")}<span>${editing ? "Actualizar" : "Guardar medición"}</span></button>
         </div>
       </form>
     </section>
@@ -560,7 +594,7 @@ function renderStatsView() {
     <section class="panel">
       <div class="panel-header">
         <h3>Filtros de estadísticas</h3>
-        <button id="clearStatsFiltersBtn" class="secondary-action" type="button">Limpiar filtros</button>
+        <button id="clearStatsFiltersBtn" class="secondary-action" type="button">${icon("filterX")}<span>Limpiar filtros</span></button>
       </div>
       <div class="filters">
         ${selectHtml("statsLine", "Línea", getLines(), state.filters.stats.line, true, "Todas las líneas")}
@@ -642,6 +676,7 @@ function baseChartOptions() {
   return {
     responsive: true,
     maintainAspectRatio: false,
+    devicePixelRatio: Math.min(3, Math.max(2, window.devicePixelRatio || 1)),
     layout: { padding: 6 },
     plugins: {
       legend: {
