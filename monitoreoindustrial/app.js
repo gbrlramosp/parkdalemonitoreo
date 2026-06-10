@@ -49,7 +49,7 @@ const state = {
 
 const navItems = [
   { id: "home", label: "Inicio", icon: "home", subtitle: "Registros del día y concentrado operativo", roles: ["administrador", "operador"] },
-  { id: "operator", label: "Agregar Empleado", icon: "userPlus", subtitle: "Alta y administración de usuarios", roles: ["administrador"] },
+  { id: "operator", label: "Agregar Operador", icon: "userPlus", subtitle: "Alta y administración de usuarios", roles: ["administrador"] },
   { id: "measurement", label: "Nueva Medición", icon: "gauge", subtitle: "Captura de registros de máquinas", roles: ["administrador", "operador"] },
   { id: "consult", label: "Consultar Mediciones", icon: "table", subtitle: "Histórico completo de mediciones", roles: ["administrador", "operador"] },
   { id: "stats", label: "Estadísticas", icon: "chart", subtitle: "Gráficas por línea, componente y semana", roles: ["administrador"] }
@@ -252,7 +252,7 @@ function renderMeasurementTableView(containerId, filterKey, todayOnly) {
       ${infoCard("Registros", cards.total, "clipboard")}
       ${infoCard("Líneas activas", cards.lines, "lines")}
       ${infoCard("Componentes", cards.components, "component")}
-      ${infoCard("Empleados", cards.operators, "users")}
+      ${infoCard("Operadores", cards.operators, "users")}
     </div>
     <section class="panel">
       <div class="panel-header">
@@ -304,7 +304,7 @@ function renderFilters(filterKey) {
       ${selectHtml("line", "Línea", getLines(), filters.line, true)}
       ${selectHtml("component", "Componente", COMPONENTS, filters.component, true)}
       ${selectHtml("week", "Semana", weeks(), filters.week, true)}
-      ${selectHtml("operator", "Empleado", operators, getOperatorFilterValue(filters.operator), true)}
+      ${selectHtml("operator", "Operador", operators, getOperatorFilterValue(filters.operator), true)}
     </div>
   `;
 }
@@ -330,7 +330,7 @@ function renderTable(rows) {
             <th>Línea</th>
             <th>Componente</th>
             <th>Semana</th>
-            <th>Empleado</th>
+            <th>Operador</th>
             <th>Consultar</th>
           </tr>
         </thead>
@@ -366,7 +366,7 @@ function showDetail(id) {
   if (!row) return;
   const fields = [
     ["Fecha de captura", formatDate(row.capture_date)],
-    ["Empleado", row.operator],
+    ["Operador", row.operator],
     ["Línea", row.line],
     ["Componente", row.component],
     ["Año", row.year],
@@ -399,16 +399,16 @@ function renderOperatorView() {
   const editingOperator = state.operators.find((operator) => operator.id === state.editingOperatorId);
   container.innerHTML = `
     <section class="panel">
-      <div class="panel-header"><h3>${editingOperator ? "Editar empleado" : "Agregar empleado"}</h3></div>
+      <div class="panel-header"><h3>${editingOperator ? "Editar operador" : "Agregar operador"}</h3></div>
       <form id="operatorForm" class="form-grid two">
-        <label>Nombre completo del empleado<input id="operatorName" value="${escapeAttr(editingOperator?.full_name || "")}" required /></label>
+        <label>Nombre completo del operador<input id="operatorName" value="${escapeAttr(editingOperator?.full_name || "")}" required /></label>
         <label>Número de empleado<input id="employeeNumber" value="${escapeAttr(editingOperator?.employee_number || "")}" required /></label>
         <label>Usuario<input id="operatorUsername" value="${escapeAttr(editingOperator?.username || "")}" disabled /></label>
         <label>Contraseña<input id="operatorPassword" value="${escapeAttr(editingOperator?.password || "")}" disabled /></label>
         <label>Rol<select id="operatorRole" required><option value="administrador" ${editingOperator?.role === "administrador" ? "selected" : ""}>Administrador</option><option value="operador" ${editingOperator?.role === "operador" ? "selected" : ""}>Operador</option></select></label>
         <div class="form-actions">
           ${editingOperator ? `<button id="cancelOperatorEditBtn" class="ghost-action" type="button">${icon("x")}<span>Cancelar</span></button>` : ""}
-          <button class="primary-action save-action" type="submit">${icon("save")}<span>${editingOperator ? "Actualizar empleado" : "Guardar empleado"}</span></button>
+          <button class="primary-action save-action" type="submit">${icon("save")}<span>${editingOperator ? "Actualizar operador" : "Guardar operador"}</span></button>
         </div>
       </form>
     </section>
@@ -474,10 +474,10 @@ async function saveOperator(event) {
       dom.currentUserRole.textContent = roleLabel(operator.role);
     }
     state.editingOperatorId = null;
-    showToast("Empleado actualizado.");
+    showToast("Operador actualizado.");
   } else {
     state.operators.push(operator);
-    showToast("Empleado guardado.");
+    showToast("Operador guardado.");
   }
   await persistOperators();
   if (state.currentUser.role !== "administrador") {
@@ -489,13 +489,13 @@ async function saveOperator(event) {
 }
 
 async function deleteOperator(id) {
-  if (!confirm("¿Deseas eliminar este empleado?")) return;
+  if (!confirm("¿Deseas eliminar este operador?")) return;
   state.operators = state.operators.filter((operator) => operator.id !== id);
   if (state.supabase) {
     await state.supabase.from(TABLES.operators).delete().eq("id", id);
   }
   await persistOperators();
-  showToast("Empleado eliminado.");
+  showToast("Operador eliminado.");
   renderOperatorView();
 }
 
@@ -507,7 +507,7 @@ function renderMeasurementFormView(prefill = null) {
     <section class="panel">
       <div class="panel-header"><h3>${editing ? "Editar medición" : "Nueva medición"}</h3></div>
       <form id="measurementForm" class="form-grid three">
-        <label>Empleado<input id="measureOperator" value="${escapeAttr(row.operator || state.currentUser.full_name)}" disabled /></label>
+        <label>Operador<input id="measureOperator" value="${escapeAttr(row.operator || state.currentUser.full_name)}" disabled /></label>
         <label>Línea${selectHtml("measureLine", "", getLines(), row.line || "", false)}</label>
         <label>Componente${selectHtml("measureComponent", "", COMPONENTS, row.component || "", false)}</label>
         <label>Año<input id="measureYear" type="number" min="2000" max="2100" value="${escapeAttr(row.year || new Date().getFullYear())}" required /></label>
@@ -603,7 +603,7 @@ function renderStatsView() {
         ${selectHtml("statsComponent", "Componente", COMPONENTS, state.filters.stats.component, true, "Todos los componentes")}
         ${selectHtml("statsWeek", "Semana", weeks(), state.filters.stats.week, true, "Todas las semanas")}
         ${selectHtml("statsYear", "Año", [...new Set(state.measurements.map((row) => row.year).filter(Boolean))].sort(), state.filters.stats.year, true, "Todos los años")}
-        ${selectHtml("statsOperator", "Empleado", operators, getOperatorFilterValue(state.filters.stats.operator), true, "Todos los empleados")}
+        ${selectHtml("statsOperator", "Operador", operators, getOperatorFilterValue(state.filters.stats.operator), true, "Todos los operadores")}
       </div>
     </section>
     <section class="chart-grid">
