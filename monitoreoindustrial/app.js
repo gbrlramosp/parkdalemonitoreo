@@ -258,7 +258,7 @@ function renderMeasurementTableView(containerId, filterKey, todayOnly) {
     <section class="panel">
       <div class="panel-header">
         <h3>${todayOnly ? "Registros del día" : "Todas las mediciones"}</h3>
-        ${showDownload ? `<button id="downloadExcelBtn" class="secondary-action" type="button">${icon("download")}<span>Descargar Excel</span></button>` : ""}
+        ${showDownload ? `<button id="downloadExcelBtn" class="secondary-action excel-action" type="button">${icon("download")}<span>Descargar Excel</span></button>` : ""}
       </div>
       ${renderFilters(filterKey)}
       ${renderTable(pageRows)}
