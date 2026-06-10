@@ -246,13 +246,14 @@ function renderMeasurementTableView(containerId, filterKey, todayOnly) {
   const pageRows = rows.slice((page - 1) * 10, page * 10);
   const cards = getCards(rows);
   const showDownload = state.currentUser.role === "administrador" && filterKey === "consult";
+  const showOperatorInsights = state.currentUser.role === "administrador";
 
   container.innerHTML = `
     <div class="dashboard-cards">
       ${infoCard("Registros", cards.total, "clipboard")}
       ${infoCard("Líneas activas", cards.lines, "lines")}
       ${infoCard("Componentes", cards.components, "component")}
-      ${infoCard("Operadores", cards.operators, "users")}
+      ${showOperatorInsights ? infoCard("Operadores", cards.operators, "users") : ""}
     </div>
     <section class="panel">
       <div class="panel-header">
@@ -298,13 +299,14 @@ function getCards(rows) {
 function renderFilters(filterKey) {
   const filters = state.filters[filterKey];
   const operators = getOperatorFilterOptions();
+  const showOperatorFilter = state.currentUser.role === "administrador";
   return `
     <div class="filters">
       <input data-filter="search" placeholder="Buscar por texto" value="${escapeAttr(filters.search)}" />
       ${selectHtml("line", "Línea", getLines(), filters.line, true)}
       ${selectHtml("component", "Componente", COMPONENTS, filters.component, true)}
       ${selectHtml("week", "Semana", weeks(), filters.week, true)}
-      ${selectHtml("operator", "Operador", operators, getOperatorFilterValue(filters.operator), true)}
+      ${showOperatorFilter ? selectHtml("operator", "Operador", operators, getOperatorFilterValue(filters.operator), true) : ""}
     </div>
   `;
 }
