@@ -247,6 +247,15 @@ button.primary-action.save-action {
   background: #e6e9ec;
 }
 
+.excel-action {
+  color: var(--white);
+  background: #198754;
+}
+
+.excel-action:hover {
+  background: #157347;
+}
+
 .danger-action {
   color: var(--white);
   background: var(--danger);
